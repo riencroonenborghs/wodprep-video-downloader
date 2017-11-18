@@ -15,16 +15,26 @@
           </md-input-container>
           <span class="error">{{error}}</span>
         </div>
-        <div ng-if="isYoutube" class="is-youtube" layout="row">
-          <md-switch ng-model="model.audio_only" aria-label="Audio Only" flex="35">
-            Audio Only
-          </md-switch>
-          <md-input-container ng-if="model.audio_only" flex>
-            <label>Audio Format</label>
-            <md-select ng-model="model.audio_format" ng-if="model.audio_only">
-              <md-option ng-repeat="format in audioFormats" ng-value="format" >{{format}}</md-option>
-            </md-select>
-          </md-input-container>
+        <div ng-if="isYoutube" class="is-youtube" layout="column">
+          <div layout="row">
+            <md-switch ng-model="model.audio_only" aria-label="Audio Only" flex="35">
+              Audio Only
+            </md-switch>
+            <md-input-container ng-if="model.audio_only" flex>
+              <label>Audio Format</label>
+              <md-select ng-model="model.audio_format" ng-if="model.audio_only">
+                <md-option ng-repeat="format in audioFormats" ng-value="format" >{{format}}</md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+          <div layout="row">
+            <md-switch flex="50" ng-model="model.download_subs" aria-label="Download Subtitles" flex="35">
+              Download Subtitles
+            </md-switch>
+            <md-switch flex="50" ng-if="model.download_subs" ng-model="model.srt_subs" aria-label="Download SRT" flex="35">
+              Convert to SRT
+            </md-switch>
+          </div>
         </div>
         <div layout="row">
           <md-input-container flex>

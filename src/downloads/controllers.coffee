@@ -9,6 +9,8 @@ app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "S
     file_filter: ""
     audio_only: false
     audio_format: "mp3"
+    download_subs: false
+    srt_subs: false
   $scope.forms = {}
   $scope.error = null
   $scope.resetAndCheck = ->

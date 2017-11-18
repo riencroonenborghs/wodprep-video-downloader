@@ -10,7 +10,9 @@ app.controller("NewDownloadController", [
       http_password: "",
       file_filter: "",
       audio_only: false,
-      audio_format: "mp3"
+      audio_format: "mp3",
+      download_subs: false,
+      srt_subs: false
     };
     $scope.forms = {};
     $scope.error = null;
