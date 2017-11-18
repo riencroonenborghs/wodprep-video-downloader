@@ -4,7 +4,7 @@
   "description" : "A downloader for opendirectories",
   "repository" : {
     "type" : "git",
-    "url" : "git://github.com/riencroonenborghs/opendirectories.git"
+    "url" : "git://github.com/riencroonenborghs/opendirectories-downloader-chrome-extension.git"
   },
   "keywords" : ["chrome", "extension", "opendirectories", "Chrome extension"],
   "readmeFilename" : "README.md",
