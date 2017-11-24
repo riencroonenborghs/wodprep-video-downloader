@@ -3,18 +3,28 @@ var app;
 app = angular.module("downloader.auth.controllers", []);
 
 app.controller("SessionsController", [
-  "$scope", "$auth", "$mdDialog", function($scope, $auth, $mdDialog) {
+  "$scope", "$auth", "$mdDialog", "$rootScope", function($scope, $auth, $mdDialog, $rootScope) {
     $scope.model = {
       email: "",
       password: ""
     };
-    return $scope.logIn = function() {
+    $scope.logIn = function() {
       $scope.error = "";
       return $auth.submitLogin($scope.model).then(function(d) {
         return $mdDialog.hide();
       })["catch"](function(d) {
         $scope.error = d.errors.join(", ");
         return $(".authenticate #email").focus();
+      });
+    };
+    return $scope.cancel = function() {
+      $mdDialog.hide();
+      return $mdDialog.show({
+        templateUrl: "settings/form.html",
+        controller: "SettingsFormController",
+        clickOutsideToClose: false
+      }).then(function() {
+        return $rootScope.$broadcast("reload.app");
       });
     };
   }

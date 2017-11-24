@@ -3,14 +3,14 @@ var app;
 app = angular.module("downloader.server.factories", []);
 
 app.factory("Server", [
-  "SERVER", "PORT", "ICONS", "$http", "$q", function(SERVER, PORT, ICONS, $http, $q) {
+  "ICONS", "$http", "$q", function(ICONS, $http, $q) {
     return {
       service: {
         toString: function() {
-          return "http://" + SERVER + ":" + PORT;
+          return "http://" + window.OpenDirectories.server + ":" + window.OpenDirectories.port;
         },
         build: function(path) {
-          return "http://" + SERVER + ":" + PORT + path;
+          return "http://" + window.OpenDirectories.server + ":" + window.OpenDirectories.port + path;
         },
         get: function(path) {
           var deferred;

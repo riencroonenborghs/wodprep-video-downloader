@@ -6,15 +6,22 @@ app = angular.module "downloader", [
   "ngMdIcons",
   "angular-sortable-view",
   "downloader.constants",
+  "downloader.directives",
   "downloader.controllers",
   "downloader.server.factories",
   "downloader.auth.controllers",
-  "downloader.downloads.controllers"
+  "downloader.downloads.controllers",
+  "downloader.settings.controllers",
+  "downloader.settings.services"
 ]
 
-app.config ($authProvider, SERVER, PORT) ->
+app.config ($authProvider ) ->
   $authProvider.configure
-    apiUrl: "http://#{SERVER}:#{PORT}"
+    validateOnPageLoad: false
+
+window.OpenDirectories =
+  server: null
+  port: null
 
 app.config ($mdThemingProvider) ->
   $mdThemingProvider.theme("default")

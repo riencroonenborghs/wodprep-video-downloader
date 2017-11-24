@@ -6,7 +6,3 @@ app.constant "ICONS",
   finished: "done"
   error: "error"
   cancelled: "cloud_off"
-
-
-app.constant "SERVER", "mother"
-app.constant "PORT", 80

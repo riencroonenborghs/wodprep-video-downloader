@@ -3,15 +3,29 @@ var app;
 app = angular.module("downloader.controllers", []);
 
 app.controller("AppController", [
-  "$scope", "$rootScope", "$controller", "Server", "ICONS", function($scope, $rootScope, $controller, Server, ICONS) {
+  "$scope", "$rootScope", "$controller", "Server", "ICONS", "$mdDialog", function($scope, $rootScope, $controller, Server, ICONS, $mdDialog) {
     var icon, label;
     $scope.Server = Server;
-    $controller("AuthController", {
+    $controller("SettingsController", {
       $scope: $scope
     });
-    $controller("DownloadsController", {
-      $scope: $scope
+    $rootScope.$on("reload.app", function() {
+      $controller("AuthController", {
+        $scope: $scope
+      });
+      return $controller("DownloadsController", {
+        $scope: $scope
+      });
     });
+    $scope.settings = function() {
+      return $mdDialog.show({
+        templateUrl: "settings/form.html",
+        controller: "SettingsFormController",
+        clickOutsideToClose: false
+      }).then(function() {
+        return $rootScope.$broadcast("reload.app");
+      });
+    };
     $scope.tabs = (function() {
       var results;
       results = [];

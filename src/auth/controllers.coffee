@@ -1,7 +1,7 @@
 app = angular.module "downloader.auth.controllers", []
 
-app.controller "SessionsController", ["$scope", "$auth", "$mdDialog",
-($scope, $auth, $mdDialog) ->
+app.controller "SessionsController", ["$scope", "$auth", "$mdDialog", "$rootScope",
+($scope, $auth, $mdDialog, $rootScope) ->
   $scope.model = {email: "", password: ""}
   $scope.logIn = ->
     $scope.error = ""
@@ -10,6 +10,14 @@ app.controller "SessionsController", ["$scope", "$auth", "$mdDialog",
     .catch (d) -> 
       $scope.error = d.errors.join(", ")
       $(".authenticate #email").focus()
+  $scope.cancel = ->
+    $mdDialog.hide()
+    $mdDialog.show
+      templateUrl: "settings/form.html",
+      controller: "SettingsFormController",
+      clickOutsideToClose: false
+    .then ->
+      $rootScope.$broadcast "reload.app"
 ]
 
 app.controller "AuthController", [ "$scope", "$rootScope", "$mdDialog", "$auth", "$timeout",

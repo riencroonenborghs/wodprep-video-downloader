@@ -1,9 +1,9 @@
 app = angular.module "downloader.server.factories", []
 
-app.factory "Server", [ "SERVER", "PORT", "ICONS", "$http", "$q", (SERVER, PORT, ICONS, $http, $q) ->
+app.factory "Server", [ "ICONS", "$http", "$q", (ICONS, $http, $q) ->
   service:
-    toString: -> "http://#{SERVER}:#{PORT}"
-    build: (path) -> "http://#{SERVER}:#{PORT}#{path}"
+    toString: -> "http://#{window.OpenDirectories.server}:#{window.OpenDirectories.port}"
+    build: (path) -> "http://#{window.OpenDirectories.server}:#{window.OpenDirectories.port}#{path}"
     # CRUD for downloads
     get: (path) ->
       deferred = $q.defer()
