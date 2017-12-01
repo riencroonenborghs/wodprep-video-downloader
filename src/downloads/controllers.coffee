@@ -27,8 +27,8 @@ app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "S
   $scope.close = -> $mdDialog.hide(false)
 ]
 
-app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast",
-($scope, $rootScope, $mdDialog, Server, $mdToast) ->
+app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast", "ActionCableChannel", "ActionCableConfig",
+($scope, $rootScope, $mdDialog, Server, $mdToast, ActionCableChannel, ActionCableConfig) ->
 
   $scope.statuses = ["initial", "queued", "started", "finished", "error", "cancelled"]
   $scope.tabStatuses = ["queued", "started", "finished", "error", "cancelled"]
@@ -46,6 +46,7 @@ app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Se
       $scope.downloads = {}
       for download in data
         for status in $scope.statuses
+          # $scope.downloadInfo = {id: download.id, percentage: "?", eta: "TBD"} if status == "started"
           $scope.downloads[status] ||= []
           $scope.downloads[status].push download if download.status == status
   
@@ -91,4 +92,11 @@ app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Se
     Server.service.reorder(data).then ()->
       showToast "Queues updated."
       $scope.getDownloads()
+
+  ActionCableConfig.wsUri = "ws://#{window.OpenDirectories.server}:#{window.OpenDirectories.port}/cable"
+  ActionCableConfig.debug = true
+  consumer = new ActionCableChannel "DownloadProgressChannel", {user_id: 1}
+  callback = (message) -> $scope.downloadInfo = message.download
+  consumer.subscribe callback
+  $scope.$on "$destroy", -> consumer.unsubscribe()
 ]

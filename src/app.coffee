@@ -4,6 +4,7 @@ app = angular.module "downloader", [
   "ngAnimate", 
   "ngMaterial", 
   "ngMdIcons",
+  "ngActionCable",
   "angular-sortable-view",
   "downloader.constants",
   "downloader.directives",

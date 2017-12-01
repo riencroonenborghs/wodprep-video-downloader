@@ -16,8 +16,13 @@
     <h4>Added by {{download.user.email}} on {{download.created_at | date: "EEEE, dd MMMM, hh:mm a"}}</h4>
     <p>
       <div ng-if="download.visible && (download.started_at || download.finished_at)">
-        Started: {{ download.started_at | date : "EEEE, dd MMMM, hh:mm a"}}
-        Finished: {{ download.finished_at | date : "EEEE, dd MMMM, hh:mm a"}}
+        <span ng-if="download.started_at">Started: {{ download.started_at | date : "EEEE, dd MMMM, hh:mm a"}}</span>
+        <span ng-if="download.finished_at">Finished: {{ download.finished_at | date : "EEEE, dd MMMM, hh:mm a"}}</span>
+      </div>
+      <div id="download-info" ng-if="downloadInfo.id == download.id" layout="row" layout-align="start center">
+        <span id="percentage">{{downloadInfo.percentage}}%</span>
+        <md-progress-linear md-mode="determinate" value="{{downloadInfo.percentage}}"></md-progress-linear>
+        <span id="eta">{{downloadInfo.eta}}</span>
       </div>
       <div ng-if="download.visible && download.error" class="error">
         <h2>Error</h2>
