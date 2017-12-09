@@ -3,9 +3,10 @@ var app;
 app = angular.module("downloader.controllers", []);
 
 app.controller("AppController", [
-  "$scope", "$rootScope", "$controller", "Server", "ICONS", "$mdDialog", function($scope, $rootScope, $controller, Server, ICONS, $mdDialog) {
+  "$scope", "$rootScope", "$controller", "Server", "ICONS", "$mdDialog", "ChromeStorage", function($scope, $rootScope, $controller, Server, ICONS, $mdDialog, ChromeStorage) {
     var icon, label;
     $scope.Server = Server;
+    $scope.ChromeStorage = ChromeStorage;
     $controller("SettingsController", {
       $scope: $scope
     });
