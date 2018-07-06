@@ -3,7 +3,8 @@ var app;
 app = angular.module("downloader.downloads.controllers", []);
 
 app.controller("NewDownloadController", [
-  "$scope", "$rootScope", "$mdDialog", "Server", function($scope, $rootScope, $mdDialog, Server) {
+  "$scope", "$rootScope", "$mdDialog", "Server", "$timeout", function($scope, $rootScope, $mdDialog, Server, $timeout) {
+    var counter, i;
     $scope.model = {
       url: "",
       http_username: "",
@@ -32,15 +33,38 @@ app.controller("NewDownloadController", [
       };
       return Server.service.create($scope.model).then(success, failure);
     };
-    return $scope.close = function() {
+    $scope.close = function() {
       return $mdDialog.hide(false);
     };
+    $scope.fileFilterPresetThrowAway = "";
+    $scope.fileFilterPresets = [
+      {
+        value: "*720*",
+        label: "720"
+      }, {
+        value: "*1080*",
+        label: "1080"
+      }
+    ];
+    for (counter = i = 1; i <= 10; counter = ++i) {
+      $scope.fileFilterPresets.push({
+        value: "*S0" + counter + "*",
+        label: "Season " + counter
+      });
+    }
+    $scope.setFileFilterPreset = function() {
+      console.log($scope.fileFilterPresetThrowAway);
+      return $scope.model.file_filter = $scope.fileFilterPresetThrowAway;
+    };
+    return $timeout((function() {
+      return angular.element("#input-url").focus();
+    }), 500);
   }
 ]);
 
 app.controller("DownloadsController", [
-  "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast", "ActionCableChannel", "ActionCableConfig", function($scope, $rootScope, $mdDialog, Server, $mdToast, ActionCableChannel, ActionCableConfig) {
-    var callback, consumer, showToast;
+  "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast", function($scope, $rootScope, $mdDialog, Server, $mdToast) {
+    var showToast;
     $scope.statuses = ["initial", "queued", "started", "finished", "error", "cancelled"];
     $scope.tabStatuses = ["queued", "started", "finished", "error", "cancelled"];
     showToast = function(message) {
@@ -117,7 +141,7 @@ app.controller("DownloadsController", [
         return $scope.getDownloads();
       });
     };
-    $scope.reorderDownloads = function() {
+    return $scope.reorderDownloads = function() {
       var data, download, index;
       if ($scope.selectedIndex !== 0) {
         return;
@@ -138,17 +162,5 @@ app.controller("DownloadsController", [
         return $scope.getDownloads();
       });
     };
-    ActionCableConfig.wsUri = "ws://" + window.OpenDirectories.server + ":" + window.OpenDirectories.port + "/cable";
-    ActionCableConfig.debug = true;
-    consumer = new ActionCableChannel("DownloadProgressChannel", {
-      user_id: 1
-    });
-    callback = function(message) {
-      return $scope.downloadInfo = message.download;
-    };
-    consumer.subscribe(callback);
-    return $scope.$on("$destroy", function() {
-      return consumer.unsubscribe();
-    });
   }
 ]);

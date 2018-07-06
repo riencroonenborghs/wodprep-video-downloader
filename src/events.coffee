@@ -8,13 +8,16 @@ for option in options
 
 chrome.contextMenus.onClicked.addListener (info, tab) ->
   scope = angular.element("body").scope()
-  scope.ChromeStorage.get("opendirectories.downloader").then (data)->
+  scope.ChromeStorage.get("opendirectories.downloader").then (data) ->
     window.OpenDirectories.server = data.server
     window.OpenDirectories.port   = data.port
     if tab  
+      urlParser = new window.Downloader.URLParser(info.linkUrl)
+      model = urlParser.parse()
+
       if info.menuItemId == "Downloader"
-        scope.Server.service.create({url: info.linkUrl})
+        scope.Server.service.create(model)
         alert "Added to queue"
       else if info.menuItemId == "DownloaderFront"
-        scope.Server.service.createInFront({url: info.linkUrl})
+        scope.Server.service.createInFront(model)
         alert "Added to front of queue"

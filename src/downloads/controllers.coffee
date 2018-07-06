@@ -1,7 +1,7 @@
 app = angular.module "downloader.downloads.controllers", []
 
-app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "Server",
-($scope, $rootScope, $mdDialog, Server) ->
+app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "Server", "$timeout",
+($scope, $rootScope, $mdDialog, Server, $timeout) ->
   $scope.model = 
     url: ""
     http_username: ""
@@ -25,10 +25,25 @@ app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "S
       $scope.error = message
     Server.service.create($scope.model).then success, failure
   $scope.close = -> $mdDialog.hide(false)
+  $scope.fileFilterPresetThrowAway = ""
+  $scope.fileFilterPresets = [
+    {value: "*720*", label: "720"},
+    {value: "*1080*", label: "1080"}
+  ]
+  for counter in [1..10]
+    $scope.fileFilterPresets.push {value: "*S0#{counter}*", label: "Season #{counter}"}
+  $scope.setFileFilterPreset = -> 
+    console.log $scope.fileFilterPresetThrowAway
+    $scope.model.file_filter = $scope.fileFilterPresetThrowAway
+
+
+  $timeout (->
+    angular.element("#input-url").focus()
+  ), 500
 ]
 
-app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast", "ActionCableChannel", "ActionCableConfig",
-($scope, $rootScope, $mdDialog, Server, $mdToast, ActionCableChannel, ActionCableConfig) ->
+app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Server", "$mdToast",
+($scope, $rootScope, $mdDialog, Server, $mdToast) ->
 
   $scope.statuses = ["initial", "queued", "started", "finished", "error", "cancelled"]
   $scope.tabStatuses = ["queued", "started", "finished", "error", "cancelled"]
@@ -92,11 +107,4 @@ app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Se
     Server.service.reorder(data).then ()->
       showToast "Queues updated."
       $scope.getDownloads()
-
-  ActionCableConfig.wsUri = "ws://#{window.OpenDirectories.server}:#{window.OpenDirectories.port}/cable"
-  ActionCableConfig.debug = true
-  consumer = new ActionCableChannel "DownloadProgressChannel", {user_id: 1}
-  callback = (message) -> $scope.downloadInfo = message.download
-  consumer.subscribe callback
-  $scope.$on "$destroy", -> consumer.unsubscribe()
 ]

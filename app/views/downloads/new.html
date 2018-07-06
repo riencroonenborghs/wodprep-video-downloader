@@ -11,7 +11,7 @@
         <div layout="column">
           <md-input-container flex>
             <label>URL</label>
-            <input type="text" ng-model="model.url" ng-change="resetAndCheck()" debounce="500" on-enter="save()"></md>
+            <input id="input-url" type="text" ng-model="model.url" ng-change="resetAndCheck()" debounce="500" on-enter="save()"></md>
           </md-input-container>
           <span class="error">{{error}}</span>
         </div>
@@ -40,6 +40,12 @@
           <md-input-container flex>
             <label>File Filter</label>
             <input ng-model="model.file_filter" on-enter="save()" />
+          </md-input-container>
+          <md-input-container flex>
+            <label>File Filter Presets</label>
+            <md-select ng-model="fileFilterPresetThrowAway" ng-change="setFileFilterPreset()">
+              <md-option ng-repeat="preset in fileFilterPresets" ng-value="preset.value" >{{preset.label}}</md-option>
+            </md-select>
           </md-input-container>
         </div>
         <div layout="row">
