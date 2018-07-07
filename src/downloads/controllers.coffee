@@ -33,9 +33,7 @@ app.controller "NewDownloadController", ["$scope", "$rootScope", "$mdDialog", "S
   for counter in [1..10]
     $scope.fileFilterPresets.push {value: "*S0#{counter}*", label: "Season #{counter}"}
   $scope.setFileFilterPreset = -> 
-    console.log $scope.fileFilterPresetThrowAway
     $scope.model.file_filter = $scope.fileFilterPresetThrowAway
-
 
   $timeout (->
     angular.element("#input-url").focus()
@@ -69,7 +67,7 @@ app.controller "DownloadsController", [ "$scope", "$rootScope", "$mdDialog", "Se
     $mdDialog.show
       templateUrl: "downloads/new.html"
       controller: "NewDownloadController"
-      clickOutsideToClose: false
+      clickOutsideToClose: true
     .then (added)->
       if added
         showToast "Download added."

@@ -3,7 +3,14 @@ var app;
 app = angular.module("downloader.auth.controllers", []);
 
 app.controller("SessionsController", [
-  "$scope", "$auth", "$mdDialog", "$rootScope", function($scope, $auth, $mdDialog, $rootScope) {
+  "$scope",
+  "$auth",
+  "$mdDialog",
+  "$rootScope",
+  function($scope,
+  $auth,
+  $mdDialog,
+  $rootScope) {
     $scope.model = {
       email: "",
       password: ""
@@ -12,7 +19,7 @@ app.controller("SessionsController", [
       $scope.error = "";
       return $auth.submitLogin($scope.model).then(function(d) {
         return $mdDialog.hide();
-      })["catch"](function(d) {
+      }).catch(function(d) {
         $scope.error = d.errors.join(", ");
         return $(".authenticate #email").focus();
       });
@@ -31,14 +38,27 @@ app.controller("SessionsController", [
 ]);
 
 app.controller("AuthController", [
-  "$scope", "$rootScope", "$mdDialog", "$auth", "$timeout", function($scope, $rootScope, $mdDialog, $auth, $timeout) {
+  "$scope",
+  "$rootScope",
+  "$mdDialog",
+  "$auth",
+  "$timeout",
+  function($scope,
+  $rootScope,
+  $mdDialog,
+  $auth,
+  $timeout) {
     var setUser;
     $scope.user = null;
     setUser = function(user) {
-      var initials, split;
+      var initials,
+  split;
       $scope.user = user;
       initials = (function() {
-        var i, len, ref, results;
+        var i,
+  len,
+  ref,
+  results;
         ref = $scope.user.email.split(/@/);
         results = [];
         for (i = 0, len = ref.length; i < len; i++) {
@@ -47,12 +67,14 @@ app.controller("AuthController", [
         }
         return results;
       })();
-      return $scope.user.initials = initials.slice(0, 2).join("");
+      return $scope.user.initials = initials.slice(0,
+  2).join("");
     };
     $auth.validateUser().then(function(data) {
       setUser(data);
       return $rootScope.$broadcast("downloads.get");
-    }, function() {
+    },
+  function() {
       $mdDialog.show({
         templateUrl: "sessions/new.html",
         controller: "SessionsController",
@@ -60,7 +82,8 @@ app.controller("AuthController", [
       });
       return $timeout((function() {
         return $(".authenticate #email").focus();
-      }), 500);
+      }),
+  500);
     });
     $scope.logOut = function() {
       return $auth.signOut().then(function() {
@@ -71,14 +94,18 @@ app.controller("AuthController", [
         });
         return $timeout((function() {
           return $(".authenticate #email").focus();
-        }), 500);
+        }),
+  500);
       });
     };
-    $rootScope.$on("auth:login-success", function(ev, user) {
+    $rootScope.$on("auth:login-success",
+  function(ev,
+  user) {
       setUser(user);
       return $rootScope.$broadcast("downloads.get");
     });
-    return $rootScope.$on("auth:logout-success", function(ev) {
+    return $rootScope.$on("auth:logout-success",
+  function(ev) {
       $scope.user = null;
       return $scope.downloads = [];
     });

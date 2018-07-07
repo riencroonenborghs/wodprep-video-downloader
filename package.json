@@ -1,31 +1,32 @@
 {
-  "name" : "downloader",
-  "version" : "4.7",
-  "description" : "A downloader for opendirectories",
-  "repository" : {
-    "type" : "git",
-    "url" : "git://github.com/riencroonenborghs/opendirectories-downloader-chrome-extension.git"
+  "name": "downloader",
+  "version": "4.8.0",
+  "description": "A downloader for opendirectories",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/riencroonenborghs/opendirectories-downloader-chrome-extension.git"
   },
-  "keywords" : ["chrome", "extension", "opendirectories", "Chrome extension"],
-  "readmeFilename" : "README.md",
-  "author" : "Rien Croonenborghs",
+  "keywords": ["chrome", "extension", "opendirectories", "Chrome extension"],
+  "readmeFilename": "README.md",
+  "author": "Rien Croonenborghs",
+  "homepage": "https://github.com/riencroonenborghs/bbc-iplayer-downloader-chrome-extension",
   "license": "MIT",
   "dependencies": {
-    "angular": "1.6.5",
+    "angular": "1.7.2",
     "angular-cookie": "4.1.0",
-    "angular-animate": "1.6.5",
-    "angular-aria": "1.6.5",
-    "angular-material": "1.1.4",
+    "angular-animate": "1.7.2",
+    "angular-aria": "1.7.2",
+    "angular-material": "1.1.9",
     "angular-material-icons": "0.7.1",
-    "angular-sortable-view": "0.0.15",
+    "angular-sortable-view": "0.0.17",
     "ng-token-auth": "0.0.30",
-    "jquery": "3.2.1",
-    "moment": "2.18.1"
+    "jquery": "3.3.1",
+    "moment": "2.22.2"
   },
-  "devDependencies" : {
-    "gulp" :  "3.9.1",
-    "gulp-coffee" : "2.3.4",
-    "gulp-util" : "3.0.8",
-    "del" : "3.0.0"    
+  "devDependencies": {
+    "gulp":  "3.9.1",
+    "gulp-coffee": "3.0.2",
+    "gulp-util": "3.0.8",
+    "del": "3.0.0"    
   }
 }

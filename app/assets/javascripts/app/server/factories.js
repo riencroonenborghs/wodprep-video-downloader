@@ -3,15 +3,21 @@ var app;
 app = angular.module("downloader.server.factories", []);
 
 app.factory("Server", [
-  "ICONS", "$http", "$q", function(ICONS, $http, $q) {
+  "ICONS",
+  "$http",
+  "$q",
+  function(ICONS,
+  $http,
+  $q) {
     return {
       service: {
         toString: function() {
-          return "http://" + window.OpenDirectories.server + ":" + window.OpenDirectories.port;
+          return `http://${window.OpenDirectories.server}:${window.OpenDirectories.port}`;
         },
         build: function(path) {
-          return "http://" + window.OpenDirectories.server + ":" + window.OpenDirectories.port + path;
+          return `http://${window.OpenDirectories.server}:${window.OpenDirectories.port}${path}`;
         },
+        // CRUD for downloads
         get: function(path) {
           var deferred;
           deferred = $q.defer();
@@ -20,9 +26,13 @@ app.factory("Server", [
             url: this.build("/api/v1/downloads.json"),
             dataType: "jsonp"
           }).then(function(response) {
-            var data, item;
+            var data,
+  item;
             data = (function() {
-              var i, len, ref, results;
+              var i,
+  len,
+  ref,
+  results;
               ref = response.data;
               results = [];
               for (i = 0, len = ref.length; i < len; i++) {
@@ -42,7 +52,8 @@ app.factory("Server", [
           return deferred.promise;
         },
         create: function(model) {
-          var data, deferred;
+          var data,
+  deferred;
           deferred = $q.defer();
           data = {
             download: model
@@ -53,13 +64,15 @@ app.factory("Server", [
             data: data
           }).then(function() {
             deferred.resolve();
-          }, function(message) {
+          },
+  function(message) {
             deferred.reject(message.data.error);
           });
           return deferred.promise;
         },
         createInFront: function(model) {
-          var data, deferred;
+          var data,
+  deferred;
           deferred = $q.defer();
           data = {
             download: model,
@@ -71,12 +84,13 @@ app.factory("Server", [
             data: data
           }).then(function() {
             deferred.resolve();
-          }, function(message) {
+          },
+  function(message) {
             deferred.reject(message.data.error);
           });
           return deferred.promise;
         },
-        "delete": function(download) {
+        delete: function(download) {
           var deferred;
           if (!download.canDelete) {
             return;
@@ -84,7 +98,7 @@ app.factory("Server", [
           deferred = $q.defer();
           $http({
             method: "DELETE",
-            url: this.build("/api/v1/downloads/" + download.id),
+            url: this.build(`/api/v1/downloads/${download.id}`),
             dataType: "jsonp"
           }).then(function() {
             return deferred.resolve();
@@ -99,7 +113,7 @@ app.factory("Server", [
           deferred = $q.defer();
           $http({
             method: "PUT",
-            url: this.build("/api/v1/downloads/" + download.id + "/cancel"),
+            url: this.build(`/api/v1/downloads/${download.id}/cancel`),
             dataType: "jsonp"
           }).then(function() {
             return deferred.resolve();
@@ -114,7 +128,7 @@ app.factory("Server", [
           deferred = $q.defer();
           $http({
             method: "PUT",
-            url: this.build("/api/v1/downloads/" + download.id + "/queue"),
+            url: this.build(`/api/v1/downloads/${download.id}/queue`),
             dataType: "jsonp"
           }).then(function() {
             return deferred.resolve();
@@ -134,7 +148,11 @@ app.factory("Server", [
           return deferred.promise;
         },
         reorder: function(downloads) {
-          var data, deferred, download, i, len;
+          var data,
+  deferred,
+  download,
+  i,
+  len;
           deferred = $q.defer();
           data = {
             data: {}
@@ -149,7 +167,8 @@ app.factory("Server", [
             data: data
           }).then(function() {
             deferred.resolve();
-          }, function(message) {
+          },
+  function(message) {
             deferred.reject(message.data.error);
           });
           return deferred.promise;

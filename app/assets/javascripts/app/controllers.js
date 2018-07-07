@@ -3,18 +3,37 @@ var app;
 app = angular.module("downloader.controllers", []);
 
 app.controller("AppController", [
-  "$scope", "$rootScope", "$controller", "Server", "ICONS", "$mdDialog", "ChromeStorage", function($scope, $rootScope, $controller, Server, ICONS, $mdDialog, ChromeStorage) {
-    var icon, label;
+  "$scope",
+  "$rootScope",
+  "$controller",
+  "Server",
+  "ICONS",
+  "$mdDialog",
+  "ChromeStorage",
+  function($scope,
+  $rootScope,
+  $controller,
+  Server,
+  ICONS,
+  $mdDialog,
+  ChromeStorage) {
+    var icon,
+  label;
+    // both are used for chrome events
     $scope.Server = Server;
     $scope.ChromeStorage = ChromeStorage;
-    $controller("SettingsController", {
+    $controller("SettingsController",
+  {
       $scope: $scope
     });
-    $rootScope.$on("reload.app", function() {
-      $controller("AuthController", {
+    $rootScope.$on("reload.app",
+  function() {
+      $controller("AuthController",
+  {
         $scope: $scope
       });
-      return $controller("DownloadsController", {
+      return $controller("DownloadsController",
+  {
         $scope: $scope
       });
     });

@@ -5,7 +5,8 @@ options = [
     id: "Downloader",
     contexts: ["link"],
     title: "Add to queue"
-  }, {
+  },
+  {
     id: "DownloaderFront",
     contexts: ["link"],
     title: "Add to front of queue"

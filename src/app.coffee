@@ -19,6 +19,9 @@ app.config ($authProvider ) ->
   $authProvider.configure
     validateOnPageLoad: false
 
+app.config ($compileProvider) ->
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/)
+
 window.OpenDirectories =
   server: null
   port: null
