@@ -9,7 +9,6 @@ app.config(function($authProvider) {
 });
 
 app.config(function($compileProvider) {
-  console.log($compileProvider);
   return $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
 });
 
