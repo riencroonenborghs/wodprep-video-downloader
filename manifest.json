@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Downloader",
-  "description": "Downloader",
+  "name": "WODprep Video Downloader",
+  "description": "WODprep Video Downloader",
   "version": "4.7",
 
   "browser_action": {
@@ -12,14 +12,11 @@
   "permissions": [
     "activeTab",
     "storage",
+    "tabs",
     "http://*/",
     "contextMenus"
   ],
   "icons": {
     "16": "app/assets/images/app.png"
-  },
-  "background": {
-    "page": "app/views/background.html",
-    "persistent": false
   }
 }

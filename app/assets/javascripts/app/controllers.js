@@ -1,63 +1,55 @@
 var app;
 
-app = angular.module("downloader.controllers", []);
+app = angular.module("wodprop-video-downloader.controllers", []);
 
 app.controller("AppController", [
   "$scope",
-  "$rootScope",
-  "$controller",
-  "Server",
-  "ICONS",
-  "$mdDialog",
-  "ChromeStorage",
+  "$http",
+  "$q",
   function($scope,
-  $rootScope,
-  $controller,
-  Server,
-  ICONS,
-  $mdDialog,
-  ChromeStorage) {
-    var icon,
-  label;
-    // both are used for chrome events
-    $scope.Server = Server;
-    $scope.ChromeStorage = ChromeStorage;
-    $controller("SettingsController",
-  {
-      $scope: $scope
-    });
-    $rootScope.$on("reload.app",
-  function() {
-      $controller("AuthController",
-  {
-        $scope: $scope
-      });
-      return $controller("DownloadsController",
-  {
-        $scope: $scope
-      });
-    });
-    $scope.settings = function() {
-      return $mdDialog.show({
-        templateUrl: "settings/form.html",
-        controller: "SettingsFormController",
-        clickOutsideToClose: false
-      }).then(function() {
-        return $rootScope.$broadcast("reload.app");
+  $http,
+  $q) {
+    var getCurrentURL,
+  getVideoID,
+  getVideoStreams;
+    $scope.busy = true;
+    $scope.assets = [];
+    getCurrentURL = function() {
+      return chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      },
+  function(tabs) {
+        var activeTab;
+        activeTab = tabs[0];
+        return getVideoID(activeTab.url);
       });
     };
-    $scope.tabs = (function() {
-      var results;
-      results = [];
-      for (label in ICONS) {
-        icon = ICONS[label];
-        results.push({
-          title: label,
-          icon: icon
-        });
-      }
-      return results;
-    })();
-    return $scope.selectedIndex = 0;
+    getVideoID = function(url) {
+      return $http.get(url).then(function(data) {
+        var node,
+  videoID;
+        node = $(data.data).find("[data-wistia-id]")[0];
+        videoID = node.dataset.wistiaId;
+        return getVideoStreams(videoID);
+      });
+    };
+    getVideoStreams = function(videoID) {
+      var url;
+      url = `http://fast.wistia.net/embed/iframe/${videoID}`;
+      return $http.get(url).then(function(data) {
+        var json,
+  jsonString,
+  regExp;
+        regExp = new RegExp("W.iframeInit(.*);");
+        jsonString = data.data.match(regExp)[1];
+        jsonString = jsonString.substring(1,
+  jsonString.length - 5);
+        json = JSON.parse(jsonString);
+        $scope.assets = json.assets;
+        return $scope.busy = false;
+      });
+    };
+    return getCurrentURL();
   }
 ]);

@@ -1,25 +1,22 @@
 {
-  "name": "downloader",
-  "version": "4.8.0",
-  "description": "A downloader for opendirectories",
+  "name": "WODprep Video Downloader",
+  "version": "1.0.0",
+  "description": "Download videos from WODprep",
   "repository": {
     "type": "git",
-    "url": "git://github.com/riencroonenborghs/opendirectories-downloader-chrome-extension.git"
+    "url": "git://github.com/riencroonenborghs/wodprep-video-downloader.git"
   },
-  "keywords": ["chrome", "extension", "opendirectories", "Chrome extension"],
+  "keywords": ["chrome", "extension", "WODprep", "WODprerp video downloader", "Chrome extension"],
   "readmeFilename": "README.md",
   "author": "Rien Croonenborghs",
-  "homepage": "https://github.com/riencroonenborghs/bbc-iplayer-downloader-chrome-extension",
+  "homepage": "https://github.com/riencroonenborghs/wodprep-video-downloader",
   "license": "MIT",
   "dependencies": {
-    "angular": "1.7.2",
+    "angular": "1.7.5",
     "angular-cookie": "4.1.0",
-    "angular-animate": "1.7.2",
-    "angular-aria": "1.7.2",
+    "angular-animate": "1.7.5",
+    "angular-aria": "1.7.5",
     "angular-material": "1.1.9",
-    "angular-material-icons": "0.7.1",
-    "angular-sortable-view": "0.0.17",
-    "ng-token-auth": "0.0.30",
     "jquery": "3.3.1",
     "moment": "2.22.2"
   },
@@ -27,6 +24,7 @@
     "gulp":  "3.9.1",
     "gulp-coffee": "3.0.2",
     "gulp-util": "3.0.8",
+    "gulp-watch": "5.0.1",
     "del": "3.0.0"    
   }
 }

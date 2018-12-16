@@ -1,25 +1,31 @@
-app = angular.module "downloader.controllers", []
+app = angular.module "wodprop-video-downloader.controllers", []
 
-app.controller "AppController", ["$scope", "$rootScope", "$controller", "Server", "ICONS", "$mdDialog", "ChromeStorage"
-($scope, $rootScope, $controller, Server, ICONS, $mdDialog, ChromeStorage) ->
-  # both are used for chrome events
-  $scope.Server = Server 
-  $scope.ChromeStorage = ChromeStorage
-  
-  $controller "SettingsController", $scope: $scope
-  $rootScope.$on "reload.app", ->
-    $controller "AuthController", $scope: $scope
-    $controller "DownloadsController", $scope: $scope    
+app.controller "AppController", ["$scope", "$http", "$q",
+($scope, $http, $q) ->
 
-  $scope.settings = ->
-    $mdDialog.show
-      templateUrl: "settings/form.html",
-      controller: "SettingsFormController",
-      clickOutsideToClose: false
-    .then ->
-      $rootScope.$broadcast "reload.app"
-  
-  $scope.tabs = for label, icon of ICONS
-    {title: label, icon: icon}
-  $scope.selectedIndex = 0
+  $scope.busy = true
+  $scope.assets = []
+  getCurrentURL = ->
+    chrome.tabs.query({active: true, currentWindow: true}, (tabs) ->
+      activeTab = tabs[0]
+      getVideoID activeTab.url      
+    )
+
+  getVideoID = (url) ->
+    $http.get(url).then (data) ->
+      node = $(data.data).find("[data-wistia-id]")[0]
+      videoID = node.dataset.wistiaId
+      getVideoStreams videoID
+
+  getVideoStreams = (videoID) ->
+    url = "http://fast.wistia.net/embed/iframe/#{videoID}"
+    $http.get(url).then (data) ->
+      regExp = new RegExp("W.iframeInit(.*);")
+      jsonString = data.data.match(regExp)[1]
+      jsonString = jsonString.substring(1, jsonString.length - 5)
+      json = JSON.parse jsonString
+      $scope.assets = json.assets
+      $scope.busy = false
+
+  getCurrentURL()
 ]

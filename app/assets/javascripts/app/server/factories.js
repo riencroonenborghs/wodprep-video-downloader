@@ -1,175 +1,57 @@
 var app;
 
-app = angular.module("downloader.server.factories", []);
+app = angular.module("food.server.factories", []);
 
 app.factory("Server", [
-  "ICONS",
   "$http",
   "$q",
-  function(ICONS,
-  $http,
+  function($http,
   $q) {
     return {
       service: {
         toString: function() {
-          return `http://${window.OpenDirectories.server}:${window.OpenDirectories.port}`;
+          return `http://${window.FoodLogger.server}:${window.FoodLogger.port}`;
         },
-        build: function(path) {
-          return `http://${window.OpenDirectories.server}:${window.OpenDirectories.port}${path}`;
+        build: function(path,
+  params = []) {
+          var i,
+  key,
+  len,
+  param,
+  query,
+  url,
+  value;
+          url = `http://${window.FoodLogger.server}:${window.FoodLogger.port}${path}`;
+          if (params.length) {
+            query = [];
+            for (i = 0, len = params.length; i < len; i++) {
+              param = params[i];
+              for (key in param) {
+                value = param[key];
+                query.push(`${key}=${value}`);
+              }
+            }
+            return url += `?${query.join("&")}`;
+          }
         },
-        // CRUD for downloads
-        get: function(path) {
+        search: function(query) {
           var deferred;
           deferred = $q.defer();
           $http({
             method: "GET",
-            url: this.build("/api/v1/downloads.json"),
+            url: this.build("/api/v1/food_items.json",
+  [
+              {
+                query: query
+              }
+            ]),
             dataType: "jsonp"
           }).then(function(response) {
-            var data,
-  item;
-            data = (function() {
-              var i,
-  len,
-  ref,
-  results;
-              ref = response.data;
-              results = [];
-              for (i = 0, len = ref.length; i < len; i++) {
-                item = ref[i];
-                item.visible = false;
-                item.icon = ICONS[item.status];
-                item.hasPointer = item.status !== "initial" && item.status !== "queued";
-                item.canDelete = item.status !== "started" && item.status !== "queued";
-                item.canCancel = item.status === "queued";
-                item.canQueue = item.status === "initial" || item.status === "finished" || item.status === "error" || item.status === "cancelled";
-                results.push(item);
-              }
-              return results;
-            })();
-            return deferred.resolve(data);
-          });
-          return deferred.promise;
-        },
-        create: function(model) {
-          var data,
-  deferred;
-          deferred = $q.defer();
-          data = {
-            download: model
-          };
-          $http({
-            method: "POST",
-            url: this.build("/api/v1/downloads.json"),
-            data: data
-          }).then(function() {
-            deferred.resolve();
-          },
-  function(message) {
-            deferred.reject(message.data.error);
-          });
-          return deferred.promise;
-        },
-        createInFront: function(model) {
-          var data,
-  deferred;
-          deferred = $q.defer();
-          data = {
-            download: model,
-            front: true
-          };
-          $http({
-            method: "POST",
-            url: this.build("/api/v1/downloads.json"),
-            data: data
-          }).then(function() {
-            deferred.resolve();
-          },
-  function(message) {
-            deferred.reject(message.data.error);
-          });
-          return deferred.promise;
-        },
-        delete: function(download) {
-          var deferred;
-          if (!download.canDelete) {
-            return;
-          }
-          deferred = $q.defer();
-          $http({
-            method: "DELETE",
-            url: this.build(`/api/v1/downloads/${download.id}`),
-            dataType: "jsonp"
-          }).then(function() {
-            return deferred.resolve();
-          });
-          return deferred.promise;
-        },
-        cancel: function(download) {
-          var deferred;
-          if (!download.canCancel) {
-            return;
-          }
-          deferred = $q.defer();
-          $http({
-            method: "PUT",
-            url: this.build(`/api/v1/downloads/${download.id}/cancel`),
-            dataType: "jsonp"
-          }).then(function() {
-            return deferred.resolve();
-          });
-          return deferred.promise;
-        },
-        queue: function(download) {
-          var deferred;
-          if (!download.canQueue) {
-            return;
-          }
-          deferred = $q.defer();
-          $http({
-            method: "PUT",
-            url: this.build(`/api/v1/downloads/${download.id}/queue`),
-            dataType: "jsonp"
-          }).then(function() {
-            return deferred.resolve();
-          });
-          return deferred.promise;
-        },
-        clear: function() {
-          var deferred;
-          deferred = $q.defer();
-          $http({
-            method: "POST",
-            url: this.build("/api/v1/downloads/clear"),
-            dataType: "jsonp"
-          }).then(function() {
-            return deferred.resolve();
-          });
-          return deferred.promise;
-        },
-        reorder: function(downloads) {
-          var data,
-  deferred,
-  download,
-  i,
-  len;
-          deferred = $q.defer();
-          data = {
-            data: {}
-          };
-          for (i = 0, len = downloads.length; i < len; i++) {
-            download = downloads[i];
-            data.data[download.id] = download.weight;
-          }
-          $http({
-            method: "POST",
-            url: this.build("/api/v1/downloads/reorder"),
-            data: data
-          }).then(function() {
-            deferred.resolve();
-          },
-  function(message) {
-            deferred.reject(message.data.error);
+            if (response.data.success) {
+              return deferred.resolve(response.data.data.food_items);
+            } else {
+              return deferred.reject(response.data.message);
+            }
           });
           return deferred.promise;
         }
@@ -177,3 +59,101 @@ app.factory("Server", [
     };
   }
 ]);
+
+// # CRUD for downloads
+// get: (path) ->
+//   deferred = $q.defer()
+//   $http
+//     method: "GET"
+//     url: @build("/api/v1/downloads.json")
+//     dataType: "jsonp"
+//   .then (response) -> 
+//     data = for item in response.data
+//       item.visible    = false
+//       item.icon       = ICONS[item.status]
+//       item.hasPointer = (item.status != "initial" && item.status != "queued")
+//       item.canDelete  = (item.status != "started" && item.status != "queued")
+//       item.canCancel  = (item.status == "queued")
+//       item.canQueue   = (item.status == "initial" || item.status == "finished" || item.status == "error" || item.status == "cancelled")
+//       item
+//     deferred.resolve data
+//   deferred.promise
+// create: (model) ->
+//   deferred = $q.defer()
+//   data = {download: model}
+//   $http
+//     method: "POST"
+//     url: @build("/api/v1/downloads.json")
+//     data: data
+//   .then () ->
+//     deferred.resolve()
+//     return
+//   , (message) ->      
+//     deferred.reject(message.data.error)
+//     return
+//   deferred.promise
+// createInFront: (model) ->
+//   deferred = $q.defer()
+//   data = {download: model, front: true}
+//   $http
+//     method: "POST"
+//     url: @build("/api/v1/downloads.json")
+//     data: data
+//   .then () ->
+//     deferred.resolve()
+//     return
+//   , (message) ->      
+//     deferred.reject(message.data.error)
+//     return
+//   deferred.promise
+// delete: (download) ->
+//   return unless download.canDelete
+//   deferred = $q.defer()
+//   $http
+//     method: "DELETE"
+//     url: @build("/api/v1/downloads/#{download.id}")
+//     dataType: "jsonp"
+//   .then () -> deferred.resolve()
+//   deferred.promise
+// cancel: (download) ->
+//   return unless download.canCancel
+//   deferred = $q.defer()
+//   $http
+//     method: "PUT"
+//     url: @build("/api/v1/downloads/#{download.id}/cancel")
+//     dataType: "jsonp"
+//   .then () -> deferred.resolve()
+//   deferred.promise
+// queue: (download) ->
+//   return unless download.canQueue
+//   deferred = $q.defer()
+//   $http
+//     method: "PUT"
+//     url: @build("/api/v1/downloads/#{download.id}/queue")
+//     dataType: "jsonp"
+//   .then () -> deferred.resolve()
+//   deferred.promise
+// clear: ->
+//   deferred = $q.defer()
+//   $http
+//     method: "POST"
+//     url: @build("/api/v1/downloads/clear")
+//     dataType: "jsonp"
+//   .then () -> deferred.resolve()
+//   deferred.promise    
+// reorder: (downloads) ->
+//   deferred = $q.defer()
+//   data = {data: {}}
+//   for download in downloads
+//     data.data[download.id] = download.weight
+//   $http
+//     method: "POST"
+//     url: @build("/api/v1/downloads/reorder")
+//     data: data
+//   .then () ->
+//     deferred.resolve()
+//     return
+//   , (message) ->      
+//     deferred.reject(message.data.error)
+//     return
+//   deferred.promise
