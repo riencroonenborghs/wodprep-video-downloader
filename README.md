@@ -1,5 +1,7 @@
 # WODprep Video Downloader
 
+A Chrome extension to download videos from the WODProp website.
+
 ## Build
 
 `gulp`
