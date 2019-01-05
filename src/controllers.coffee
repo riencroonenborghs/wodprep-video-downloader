@@ -1,4 +1,4 @@
-app = angular.module "wodprop-video-downloader.controllers", []
+app = angular.module "wodprep-video-downloader.controllers", []
 
 app.controller "AppController", ["$scope", "$http", "$q",
 ($scope, $http, $q) ->

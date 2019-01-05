@@ -1,8 +1,8 @@
-app = angular.module "wodprop-video-downloader", [
+app = angular.module "wodprep-video-downloader", [
   "ngAria", 
   "ngAnimate", 
   "ngMaterial", 
-  "wodprop-video-downloader.controllers"
+  "wodprep-video-downloader.controllers"
 ]
 
 app.config ($compileProvider) ->

@@ -1,6 +1,6 @@
 var app;
 
-app = angular.module("wodprop-video-downloader", ["ngAria", "ngAnimate", "ngMaterial", "wodprop-video-downloader.controllers"]);
+app = angular.module("wodprep-video-downloader", ["ngAria", "ngAnimate", "ngMaterial", "wodprep-video-downloader.controllers"]);
 
 app.config(function($compileProvider) {
   return $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
