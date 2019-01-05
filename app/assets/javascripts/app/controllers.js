@@ -50,6 +50,12 @@ app.controller("AppController", [
         return $scope.busy = false;
       });
     };
+    $scope.download = function(asset) {
+      return chrome.downloads.download({
+        url: asset.url,
+        saveAs: true
+      });
+    };
     return getCurrentURL();
   }
 ]);

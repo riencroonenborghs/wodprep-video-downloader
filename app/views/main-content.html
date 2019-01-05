@@ -5,8 +5,8 @@
       <img ng-src="app/assets/images/app.png" class="md-avatar" />
       <div class="md-list-item-text" layout="column">
         <h3>{{asset.display_name}} ({{asset.container}})</h3>
-        <p>
-          <a href="{{asset.url}}">download video</a>
+        <p style="width: 150px;">
+          <md-button ng-click="download(asset)">download video</md-button>
         </p>
       </div>
       <md-divider></md-divider>

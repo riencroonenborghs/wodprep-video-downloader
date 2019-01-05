@@ -27,5 +27,10 @@ app.controller "AppController", ["$scope", "$http", "$q",
       $scope.assets = json.assets
       $scope.busy = false
 
+  $scope.download = (asset) ->
+    chrome.downloads.download
+      url: asset.url
+      saveAs: true
+
   getCurrentURL()
 ]

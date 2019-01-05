@@ -14,7 +14,8 @@
     "storage",
     "tabs",
     "http://*/",
-    "contextMenus"
+    "contextMenus",
+    "downloads"
   ],
   "icons": {
     "16": "app/assets/images/app.png"
